@@ -1,0 +1,524 @@
+#!/bin/bash
+
+function defpath()
+{
+	mkdir -p $HOME/Images/Screenshots/
+	printf "$HOME/Images/Screenshots/" >> $HOME/.sctaker
+}
+
+shotpath="$(cat $HOME/.sctaker)"
+
+if [ -f "$HOME/.sctaker" ]
+then
+	if [ "$(cat $HOME/.sctaker)" != "" ]
+	then
+		if [ -d "$(cat $HOME/.sctaker)" ]
+		then
+			printf ""
+		else
+			rm $HOME/.sctaker
+			touch $HOME/.sctaker
+			defpath
+		fi
+	else
+		screenpath=$(printf "" | dmenu -p "Screenshot Path:")
+		if [ -d "$screenpath" ]
+		then
+			printf "$screenpath" >> $HOME/.sctaker
+		else
+			pathmen=$(printf "Create it\nCancel" | dmenu -i -p "Dir doesnt exist")
+			if [ $pathmen = "Create it" ]
+			then
+				mkdir -p "$screenpath"
+				printf "$screenpath" >> $HOME/.sctaker
+			else
+				defpath
+			fi
+		fi
+			
+	fi
+	printf ""
+else 
+	touch $HOME/.sctaker
+	scpath=$(printf "" | dmenu -p "Screenshot Path:")
+	if [ -d "$scpath" ]
+	then
+		printf "$scpath" >> $HOME/.sctaker
+	else
+		pathmenu=$(printf "Create it\nCancel" | dmenu -i -p "Dir doesnt exist")
+		if [ $pathmenu = "Create it" ]
+		then
+			mkdir -p "$scpath"
+			printf "$scpath" >> $HOME/.sctaker
+		else
+			mkdir -p $HOME/Images/Screenshots/
+			printf "$HOME/Images/Screenshots/" >> $HOME/.sctaker
+		fi
+	fi
+fi
+
+menu=$(printf "Fullscreen\nPartial\nWindow" | dmenu -i -p "Screentake")
+
+
+# PARTIAL
+
+if [ $menu = "Partial" ]
+then
+	# scrot file.png
+	partialchoice=$(printf "" | dmenu -p "Filename:")
+	if [ "$partialchoice" = "" ]
+	then
+		partialchoice="screen_%Y-%m-%d_%H-%M-%S"
+	fi
+	if [[ $partialchoice == *.png ]] || [[ $partialchoice == *.jpg ]] || [[ $partialchoice == *.jpeg ]]
+	then
+		printf ""
+	else
+		partialchoice="$partialchoice.png"
+	fi
+	delpartmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+	if [ "$delpartmenu" = "No delay" ]
+	then
+		scrot -bs "$shotpath$partialchoice"
+		notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+	elif [ "$delpartmenu" = "Delay" ]
+	then
+		delpartchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+		if [ "$delpartchoice" = "5s" ]
+		then
+			notify-send "5 seconds" "Click to dismiss"
+			scrot -bs --delay 5 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "10s" ]
+		then
+			notify-send "10 seconds" "Click to dismiss"
+			scrot -bs --delay 10 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "20s" ]
+		then
+			notify-send "20 seconds" "Click to dismiss"
+			scrot -bs --delay 20 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "45s" ]
+		then
+			notify-send "45 seconds" "Click to dismiss"
+			scrot -bs --delay 45 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "1m" ]
+		then
+			notify-send "1 Minute" "Click to dismiss"
+			scrot -bs --delay 60 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "1.5m" ]
+		then
+			notify-send "1.5 Minutes" "Click to dismiss"
+			scrot -bs --delay 90 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "2m" ]
+		then
+			notify-send "2 Minutes" "Click to dismiss"
+			scrot -bs --delay 120 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "3m" ]
+		then
+			notify-send "3 Minutes" "Click to dismiss"
+			scrot -bs --delay 180 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "5m" ]
+		then
+			notify-send "5 Minutes" "Click to dismiss"
+			scrot -bs --delay 300 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "7m" ]
+		then
+			notify-send "7 Minutes" "Click to dismiss"
+			scrot -bs --delay 420 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		elif [ "$delpartchoice" = "10m" ]
+		then
+			notify-send "10 Minutes" "Click to dismiss"
+			scrot -bs --delay 600 -c "$shotpath$partialchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$partialchoice"
+		fi
+	fi
+
+
+# WINDOW
+
+elif [ $menu = "Window" ]
+then
+	# scrot file.png
+	winchoice=$(printf "" | dmenu -p "Filename:")
+	if [ "$winchoice" = "" ]
+	then
+		winchoice="screen_%Y-%m-%d_%H-%M-%S"
+	fi
+	if [[ $winchoice != *.png ]] || [[ $winchoice != *.jpg ]] || [[ $winchoice != *.jpeg ]]
+	then
+		winchoice="$winchoice.png"
+	fi
+
+	acwinmenu=$(printf "Active window\nSelect window" | dmenu -i -p "Screentake")
+	if [ "$acwinmenu" = "Active window" ]
+	then
+		bordwinmenu=$(printf "Border\nNo border" | dmenu -i -p "Screentake")
+		if [ "$bordwinmenu" = "Border" ]
+		then
+
+			delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+			if [ "$delwinmenu" = "No delay" ]
+			then
+				scrot -ub "$shotpath$winchoice"
+			elif [ "$delwinmenu" = "Delay" ]
+			then
+				delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+				if [ "$delwinchoice" = "5s" ]
+				then
+					notify-send "5 seconds" "Click to dismiss"
+					scrot --delay 5 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10s" ]
+				then
+					notify-send "10 seconds" "Click to dismiss"
+					scrot --delay 10 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "20s" ]
+				then
+					notify-send "20 seconds" "Click to dismiss"
+					scrot --delay 20 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "45s" ]
+				then
+					notify-send "45 seconds" "Click to dismiss"
+					scrot --delay 45 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1m" ]
+				then
+					notify-send "1 Minute" "Click to dismiss"
+					scrot --delay 60 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1.5m" ]
+				then
+					notify-send "1.5 Minutes" "Click to dismiss"
+					scrot --delay 90 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "2m" ]
+				then
+					notify-send "2 Minutes" "Click to dismiss"
+					scrot --delay 120 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "3m" ]
+				then
+					notify-send "3 Minutes" "Click to dismiss"
+					scrot --delay 180 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "5m" ]
+				then
+					notify-send "5 Minutes" "Click to dismiss"
+					scrot --delay 300 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "7m" ]
+				then
+					notify-send "7 Minutes" "Click to dismiss"
+					scrot --delay 420 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10m" ]
+				then
+					notify-send "10 Minutes" "Click to dismiss"
+					scrot --delay 600 -ub "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				fi
+			fi
+		elif [ "$bordwinmenu" = "No border" ]
+		then
+			delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+			if [ "$delwinmenu" = "No delay" ]
+			then
+				scrot -u "$shotpath$winchoice"
+			elif [ "$delwinmenu" = "Delay" ]
+			then
+				delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+				if [ "$delwinchoice" = "5s" ]
+				then
+					notify-send "5 seconds" "Click to dismiss"
+					scrot --delay 5 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10s" ]
+				then
+					notify-send "10 seconds" "Click to dismiss"
+					scrot --delay 10 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "20s" ]
+				then
+					notify-send "20 seconds" "Click to dismiss"
+					scrot --delay 20 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "45s" ]
+				then
+					notify-send "45 seconds" "Click to dismiss"
+					scrot --delay 45 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1m" ]
+				then
+					notify-send "1 Minute" "Click to dismiss"
+					scrot --delay 60 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1.5m" ]
+				then
+					notify-send "1.5 Minutes" "Click to dismiss"
+					scrot --delay 90 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "2m" ]
+				then
+					notify-send "2 Minutes" "Click to dismiss"
+					scrot --delay 120 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "3m" ]
+				then
+					notify-send "3 Minutes" "Click to dismiss"
+					scrot --delay 180 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "5m" ]
+				then
+					notify-send "5 Minutes" "Click to dismiss"
+					scrot --delay 300 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "7m" ]
+				then
+					notify-send "7 Minutes" "Click to dismiss"
+					scrot --delay 420 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10m" ]
+				then
+					notify-send "10 Minutes" "Click to dismiss"
+					scrot --delay 600 -u "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				fi
+			fi
+		fi
+	
+	elif [ "$acwinmenu" = "Select window" ]
+	then
+		bordwinmenu=$(printf "Border\nNo border" | dmenu -i -p "Screentake")
+		if [ "$bordwinmenu" = "Border" ]
+		then
+
+			delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+			if [ "$delwinmenu" = "No delay" ]
+			then
+				scrot -sb "$shotpath$winchoice"
+			elif [ "$delwinmenu" = "Delay" ]
+			then
+				delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+				if [ "$delwinchoice" = "5s" ]
+				then
+					notify-send "5 seconds" "Click to dismiss"
+					scrot --delay 5 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10s" ]
+				then
+					notify-send "10 seconds" "Click to dismiss"
+					scrot --delay 10 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "20s" ]
+				then
+					notify-send "20 seconds" "Click to dismiss"
+					scrot --delay 20 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "45s" ]
+				then
+					notify-send "45 seconds" "Click to dismiss"
+					scrot --delay 45 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1m" ]
+				then
+					notify-send "1 Minute" "Click to dismiss"
+					scrot --delay 60 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1.5m" ]
+				then
+					notify-send "1.5 Minutes" "Click to dismiss"
+					scrot --delay 90 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "2m" ]
+				then
+					notify-send "2 Minutes" "Click to dismiss"
+					scrot --delay 120 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "3m" ]
+				then
+					notify-send "3 Minutes" "Click to dismiss"
+					scrot --delay 180 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "5m" ]
+				then
+					notify-send "5 Minutes" "Click to dismiss"
+					scrot --delay 300 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "7m" ]
+				then
+					notify-send "7 Minutes" "Click to dismiss"
+					scrot --delay 420 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10m" ]
+				then
+					notify-send "10 Minutes" "Click to dismiss"
+					scrot --delay 600 -sb "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				fi
+			fi
+		elif [ "$bordwinmenu" = "No border" ]
+		then
+			delwinmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+			if [ "$delwinmenu" = "No delay" ]
+			then
+				scrot -s "$shotpath$winchoice"
+			elif [ "$delwinmenu" = "Delay" ]
+			then
+				delwinchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+				if [ "$delwinchoice" = "5s" ]
+				then
+					notify-send "5 seconds" "Click to dismiss"
+					scrot --delay 5 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10s" ]
+				then
+					notify-send "10 seconds" "Click to dismiss"
+					scrot --delay 10 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "20s" ]
+				then
+					notify-send "20 seconds" "Click to dismiss"
+					scrot --delay 20 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "45s" ]
+				then
+					notify-send "45 seconds" "Click to dismiss"
+					scrot --delay 45 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1m" ]
+				then
+					notify-send "1 Minute" "Click to dismiss"
+					scrot --delay 60 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "1.5m" ]
+				then
+					notify-send "1.5 Minutes" "Click to dismiss"
+					scrot --delay 90 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "2m" ]
+				then
+					notify-send "2 Minutes" "Click to dismiss"
+					scrot --delay 120 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "3m" ]
+				then
+					notify-send "3 Minutes" "Click to dismiss"
+					scrot --delay 180 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "5m" ]
+				then
+					notify-send "5 Minutes" "Click to dismiss"
+					scrot --delay 300 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "7m" ]
+				then
+					notify-send "7 Minutes" "Click to dismiss"
+					scrot --delay 420 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				elif [ "$delwinchoice" = "10m" ]
+				then
+					notify-send "10 Minutes" "Click to dismiss"
+					scrot --delay 600 -s "$shotpath$winchoice"
+					notify-send "Screenshot taken" "Saved in: $shotpath$winchoice"
+				fi
+			fi
+		fi
+	fi
+
+
+# FULLSCREEN
+
+elif [ $menu = "Fullscreen" ]
+then
+	# scrot file.png
+	fullchoice=$(printf "" | dmenu -p "Filename:")
+	if [ "$fullchoice" = "" ]
+	then
+		fullchoice="screen_%Y-%m-%d_%H-%M-%S"
+	fi
+	if [[ $fullchoice == *.png ]] || [[ $fullchoice == *.jpg ]] || [[ $fullchoice == *.jpeg ]]
+	then
+		printf ""
+	else
+		fullchoice="$fullchoice.png"
+	fi
+	delmenu=$(printf "Delay\nNo delay" | dmenu -i -p "Screentake")
+	if [ "$delmenu" = "No delay" ]
+	then
+		scrot "$shotpath$fullchoice"
+	elif [ "$delmenu" = "Delay" ]
+	then
+		delfullchoice=$(printf "5s\n10s\n20s\n45s\n1m\n1.5m\n2m\n3m\n5m\n7m\n10m" | dmenu -i -p "Delay:")
+		if [ "$delfullchoice" = "5s" ]
+		then
+			notify-send "5 seconds" "Click to dismiss"
+			scrot --delay 5 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "10s" ]
+		then
+			notify-send "10 seconds" "Click to dismiss"
+			scrot --delay 10 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "20s" ]
+		then
+			notify-send "20 seconds" "Click to dismiss"
+			scrot --delay 20 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "45s" ]
+		then
+			notify-send "45 seconds" "Click to dismiss"
+			scrot --delay 45 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "1m" ]
+		then
+			notify-send "1 Minute" "Click to dismiss"
+			scrot --delay 60 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "1.5m" ]
+		then
+			notify-send "1.5 Minutes" "Click to dismiss"
+			scrot --delay 90 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "2m" ]
+		then
+			notify-send "2 Minutes" "Click to dismiss"
+			scrot --delay 120 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "3m" ]
+		then
+			notify-send "3 Minutes" "Click to dismiss"
+			scrot --delay 180 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "5m" ]
+		then
+			notify-send "5 Minutes" "Click to dismiss"
+			scrot --delay 300 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "7m" ]
+		then
+			notify-send "7 Minutes" "Click to dismiss"
+			scrot --delay 420 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		elif [ "$delfullchoice" = "10m" ]
+		then
+			notify-send "10 Minutes" "Click to dismiss"
+			scrot --delay 600 -c "$shotpath$fullchoice"
+			notify-send "Screenshot taken" "Saved in: $shotpath$fullchoice"
+		fi
+	fi
+
+else
+	printf "error"
+fi
+

@@ -1,5 +1,5 @@
 # Screentake 🎥
-A usefull **menu** for scrot's screenshotting utility.
+A screenshotting utility implemented in dmenu
 
 ## Requirements 👐
 * `scrot`

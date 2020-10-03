@@ -4,11 +4,6 @@ A usefull **menu** for scrot's screenshotting utility.
 ## Requirements 👐
 * `scrot`
 
-* `xfce4-notifyd` 
+* `*notification handler*` 
 
 * `dmenu` 
-
-## Features to implement 💻
-* `òptimizations` 
-* `Automatic path insertion`
-* `More options`

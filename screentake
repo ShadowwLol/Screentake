@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# NOT FINISHED
-# STILL OPTIMIZING
-
 wording=""
 choicepath=""
 options=""
